@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">GCMAndroidEx</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="tv_regID">Registration ID</string>
+    <string name="btn_sendToServer">Send RegID to Server</string>
+</resources>

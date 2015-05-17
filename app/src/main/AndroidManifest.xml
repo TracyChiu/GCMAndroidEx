@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="idv.david.gcmandroidex">
+
+    <!-- 允許網路使用權限，讓RegID能送到App Server -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 允許取得Google帳號 (若裝置版本低於4.0.4以下才需要此權限) -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- 非必要，但若想收到訊息時讓處理器避免進入休眠就要此權限 -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- 讓此應用程式能接受GCM傳來的訊息 -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+
+    <!-- 自定義權限，專案套件名稱加上".permission.C2D_MESSAGE"避免與其它應用程式搞混GCM的註冊與接受 -->
+
+    <!-- 每一個app在release build的時候都需要簽署一把金鑰
+         (實際上debug build也有，預設會隨機產生一組放在 ~/.android/debug.keystore)
+         protectionLevel=signature就是指使用該權限的app需要和定義該權限的app簽署一樣的金鑰，才能取得該權限 -->
+
+    <permission
+        android:name="idv.david.gcmandroidex.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="idv.david.gcmandroidex.permission.C2D_MESSAGE" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <!-- App必須參照到google-play-services函式庫，android:value才不會跳錯誤訊息 -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 用來接收com.google.android.c2dm.intent.RECEIVE，category設定為本身應用程式套件名稱
+             同時該receiver也需要com.google.android.c2dm.permission.SEND權限
+             讓GCM只能傳送訊息給這個receiver -->
+        <receiver
+            android:name=".GCMBroadcastReceiver"
+            android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter>
+                <!-- 接收訊息 -->
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <category android:name="idv.david.gcmandroidex" />
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".GCMIntentService" />
+
+    </application>
+
+</manifest>
